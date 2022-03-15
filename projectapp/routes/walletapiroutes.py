@@ -68,6 +68,18 @@ def FundWalletCard(wallet_id, amount, save_card, redirect_url):
     response = requests.post(url, json=payload, headers=headers)
     return response.json()
 
+def SaveWalletCard(wallet_id, redirect_url):
+    url = "https://api.getwallets.co/v1/wallets/funds/cards"
+    # redirect_url = ""
+    payload = {"wallet_id":wallet_id, "save_card":True, "redirect_url":redirect_url}
+    headers = {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "Authorization": "Bearer sk_test_622bdb64bd975352423021da622bdb64bd975352423021db"
+    }
+    response = requests.post(url, json=payload, headers=headers)
+    return response.json()
+
 def FundWalletSavedCard(wallet_id,amount,code):
     url = "https://api.getwallets.co/v1/wallets/funds/cards/charge"
     payload = {"wallet_id":wallet_id, "amount":amount, "card_charge_code":code}
@@ -90,9 +102,9 @@ def FundWalletManually(wallet_id, amount):
     response = requests.post(url, json=payload, headers=headers)
     return response.json()
 
-def WalletToWallet(wallet_id1, amount, wallet_id2):
+def WalletToWallet(from_wallet, amount, to_wallet):
     url = "https://api.getwallets.co/v1/wallets/transfers/wallet"
-    payload = {"from_wallet_id":wallet_id1, "to_wallet_id":wallet_id2, "amount":amount}
+    payload = {"from_wallet_id":from_wallet, "to_wallet_id":to_wallet, "amount":amount}
     headers = {
         "Accept": "application/json",
         "Content-Type": "application/json",
@@ -135,9 +147,30 @@ def SetWebhooks(myurl):
     response = requests.post(url, json=payload, headers=headers)
     return response.json()
 
+def GetBanks():
+    url = "https://api.getwallets.co/v1/banks"
 
+    headers = {
+        "Authorization": "Bearer sk_test_622bdb64bd975352423021da622bdb64bd975352423021db"
+    }
 
+    response = requests.get(url, headers=headers)
+    return response.json()
 
+def VerifyName(bank_code, accnum):
+    url = 'https://api.getwallets.co/v1/resolve'
+
+    params = {
+        "account_number" : accnum,
+        "bank_code" : bank_code
+    }
+
+    headers = {
+        "Authorization": "Bearer sk_test_622bdb64bd975352423021da622bdb64bd975352423021db"
+    }
+
+    response = requests.get(url, params=params, headers=headers)
+    return response.json()
 
 
 

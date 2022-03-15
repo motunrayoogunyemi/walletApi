@@ -45,3 +45,26 @@ class BankFunding(db.Model):
     bank_name = db.Column(db.String(50))
     reference = db.Column(db.String(50))
     status = db.Column(db.String(50))
+
+class Transactions(db.Model):
+    id = db.Column(db.Integer(), primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer())
+    wallet_num = db.Column(db.String(50))
+    posting_type = db.Column(db.String(5))
+    reference = db.Column(db.String())
+    third_party_reference = db.Column(db.String())
+    transaction_type = db.Column(db.String(100))
+    transaction_service = db.Column(db.String(100))
+    status = db.Column(db.String(100))
+    transaction_date = db.Column(db.DateTime())
+    transaction_amount = db.Column(db.Numeric(precision=18, scale=2))
+    balance_before_transaction = db.Column(db.Numeric(precision=18, scale=2))
+    balance_after_transaction = db.Column(db.Numeric(precision=18, scale=2))
+    provider_details = db.Column(db.String())
+    to_wallet_id = db.Column(db.String())
+    customer_ref = db.Column(db.String())
+
+# good practice to have a banks table, incase you integrate other apis and they have different bank codes
+class Banks(db.Model):
+    id = db.Column(db.Integer(), primary_key=True, autoincrement=True)
+    get_wallet_code = db.Column(db.String())
