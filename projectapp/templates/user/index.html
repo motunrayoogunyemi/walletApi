@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{{url_for('static',filename='css/bootstrap.css')}}" rel="stylesheet" type="text/css">
+    <link href="{{url_for('static',filename='styles.css')}}" rel="stylesheet">
+    <title>Document</title>
+</head>
+<body>
+    <section>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-5">
+                    <div class='er__sidebar'>
+                        <div class='er__sidebar-container'>
+                            <div class='er__sidebar-container-top'>
+                                <div class='er__sidebar-container-top-profile'>
+                                    <img src='' class='' alt='profile pic' />
+                                </div>
+                                <div class='er__sidebar--container-info'>
+                                    <h2>Lorem Ipsum </h2>
+                                    <p>View Profile</p>
+                                    <h1>N0.00</h1>
+                                    <p>Wallet balance</p>
+                                </div>
+                            </div>
+                            <div class='er__sidebar-container-bottom'>
+                                <p>Errand categories</p>
+                                <p>Payment</p>
+                                <p>History</p>
+                                <p>Dispute/Ticket</p>
+                                <p>Update Profile</p>
+                                <p>Switch Role</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="box">
+                        <div class="card-details">
+                            <h2>Payment Cards</h2>
+                            <div>
+                                <p>Visa ************6544</p>
+                            </div>
+                            <button class="btn btn-dark" type="button" id="displayForm">Add credit or debit card</button>
+                            <div class="cardform">
+                                <form action="" method="post">
+                                    <div id="formHide">
+                                        <div><label for="" class="mt-2">Card Number</label><input type="text" name="cardnum" class="form-control"></div>
+                                        <div><label for="" class="mt-2">exp date</label><input type="text" name="cardexp" class="form-control" placeholder="MM/YY"></div>
+                                        <div><label for="" class="mt-2">CVV</label><input type="text" name="cardcvv" class="form-control" placeholder="***"></div>
+                                        <button class="btn btn-outline-warning mt-2">Add</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="wallet-details">
+                            <div class="wallet-box">
+                                <h1>N0.00</h1>
+                                <!-- <button class="btn btn-warning">Top up wallet</button> -->
+                                <button type="button" id="walletBtn" class="btn btn-warning" data-toggle="modal" data-target="#wallet" data-user="">Top up wallet</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="modal fade" id="wallet" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">            
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Pay To</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+
+                <p>Select payment method</p>
+              <form action="" method="post">
+                  <div><input type="radio"><label for="" class="ml-2">Visa ************6544</label></div>
+                  <div><label for="">Enter amount</label><input type="text" placeholder="NGN" class="form-control"></div>
+                  <button class="btn btn-block btn-warning mt-2">Add Funds</button>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+    </div>
+
+
+
+
+    <script src="{{url_for('static',filename='js/jquery.min.js')}}" type="text/javascript"></script>
+    <script src="{{url_for('static',filename='js/popper.min.js')}}" type="text/javascript"></script>
+    <script src="{{url_for('static',filename='js/bootstrap.js')}}" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#formHide').hide()
+            $('#displayForm').click(function(){
+                $('#formHide').show()
+            })
+        })
+    </script>
+</body>
+</html>
