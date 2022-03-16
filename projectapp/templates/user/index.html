@@ -10,6 +10,7 @@
 </head>
 <body>
     <section>
+        {{cardinfo}} {{userinfo}}
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-5">
@@ -22,7 +23,7 @@
                                 <div class='er__sidebar--container-info'>
                                     <h2>Lorem Ipsum </h2>
                                     <p>View Profile</p>
-                                    <h1>N0.00</h1>
+                                    <h1>N{{account_balance}}</h1>
                                     <p>Wallet balance</p>
                                 </div>
                             </div>
@@ -58,7 +59,7 @@
                         </div>
                         <div class="wallet-details">
                             <div class="wallet-box">
-                                <h1>N0.00</h1>
+                                <h1>N{{account_balance}}</h1>
                                 <!-- <button class="btn btn-warning">Top up wallet</button> -->
                                 <button type="button" id="walletBtn" class="btn btn-warning" data-toggle="modal" data-target="#wallet" data-user="">Top up wallet</button>
                             </div>
@@ -80,10 +81,17 @@
             </div>
             <div class="modal-body">
 
-                <p>Select payment method</p>
+                <p>Select payment Channel</p>
               <form action="" method="post">
-                  <div><input type="radio"><label for="" class="ml-2">Visa ************6544</label></div>
-                  <div><label for="">Enter amount</label><input type="text" placeholder="NGN" class="form-control"></div>
+                  <label for="">Choose a channel</label>
+                  <select name="channel" id="">
+                      <option value="">select</option>
+                      <option value="bank">Bank</option>
+                      <option value="card">Card</option>
+                  </select>
+                  <!-- <div><input type="radio" name="bank"><label for="" class="ml-2">Bank</label></div>
+                  <div><input type="radio" name="card"><label for="" class="ml-2">Card</label></div> -->
+                  <!-- <div><label for="">Enter amount</label><input type="text" placeholder="NGN" class="form-control"></div> -->
                   <button class="btn btn-block btn-warning mt-2">Add Funds</button>
               </form>
             </div>

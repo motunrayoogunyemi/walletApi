@@ -28,7 +28,7 @@ def GetAllWallets():
     return response.json()
 
 def GetWalletDetails(walletid):
-    url = "https://api.getwallets.co/v1/wallets/{walletid}"
+    url = f"https://api.getwallets.co/v1/wallets/{walletid}"
     headers = {"Accept": "application/json", "Authorization": "Bearer sk_test_622bdb64bd975352423021da622bdb64bd975352423021db"}
     response = requests.get(url, headers=headers)
     return response.json()

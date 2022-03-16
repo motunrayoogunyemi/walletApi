@@ -2,7 +2,7 @@ from asyncio.trsock import TransportSocket
 from email.policy import default
 import requests, json
 from flask import flash, render_template, request, redirect, session,url_for, jsonify
-from flask_login import LoginManager, login_required, login_user, current_user
+from flask_login import LoginManager, login_required, login_user, current_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import and_
 from projectapp import app
@@ -31,8 +31,10 @@ def register():
         db.session.commit()
         # create user wallet here
         wlt_res = wlt.CreateWallet(register_deets.user_email)
-        if wlt_res.success:
-            user_account = Accounts(user_id=register_deets.id, wallet_num=wlt_res.data.wallet_id, status=wlt_res.data.status)
+        # print(wlt_res)
+        # print(wlt_res['success'])
+        if wlt_res['success']:
+            user_account = Accounts(user_id=register_deets.id, wallet_num=wlt_res['data']['wallet_id'], account_status=wlt_res['data']['status'])
             db.session.add(user_account)
             db.session.commit()
         return redirect('/login')
@@ -52,30 +54,61 @@ def login():
         flash('invalid email or password')
     return render_template('user/login.html', form=form)
 
+# @app.route('/register', methods=['GET','POST'])
+# def register():
+#     if request.method=='POST':
+#         request_data = json.loads(request.data)
+#         hashed_pass = generate_password_hash(request_data['password'])
+#         register_deets = Users(user_fname=request_data['fname'],user_fname=request_data['lname'],user_password=hashed_pass,user_email=request_data['email'], user_address=request_data['address'], user_phone=request_data['phone'])
+#         db.session.add(register_deets)
+#         db.session.commit()
+#         # create user wallet here
+#         wlt_res = wlt.CreateWallet(register_deets.user_email)
+#         # print(wlt_res)
+#         # print(wlt_res['success'])
+#         if wlt_res['success']:
+#             user_account = Accounts(user_id=register_deets.id, wallet_num=wlt_res['data']['wallet_id'], account_status=wlt_res['data']['status'])
+#             db.session.add(user_account)
+#             db.session.commit()
+#         return redirect('/login')
+# #return render_template('user/register.html', form=form) 
+    
+
+@app.route('/logout') 
+@login_required
+def logout():
+    logout_user()
+    return 'logged out'
+
 
 @app.route('/dashboard', methods=['GET', 'POST'])
+@login_required
 def home():
-    wallet = db.session.query(Accounts).get(Accounts.user_id == current_user.id)
+    wallet = db.session.query(Accounts).filter(Accounts.user_id == current_user.id).first()
+    print(wallet)
     if request.method == 'GET':
-        userinfo = db.session.query(Users).get(Users.id == current_user.id)
+        userinfo = db.session.query(Users).get(current_user.id)
         account_info = wlt.GetWalletDetails(wallet.wallet_num)
-        if account_info.success:
-            cardresinfo = []
-            for card in account_info.saved_cards:
-                entry = {}
-                entry.user_id = current_user.id
-                entry.cardnumber = card.card_pan
-                entry.cardexpirydate = card.expiration
-                entry.cardcvvnum = card.charge_code
-                cardresinfo.append(entry)
-                card_in_db = db.session.query(Cards).filter(and_(Cards.user_id == current_user.id, Cards.cardnumber == card.card_pan))
-                bool_card_in_db = db.session.query(card_in_db.exists()).scalar()
-                if not bool_card_in_db:
-                    new_card = Cards(user_id=entry.user_id, cardnumber=entry.cardnumber, cardexpirydate=entry.cardexpirydate, cardcvvnum=entry.cardcvvnum )
-                    db.session.add(new_card)
-                    db.session.commit()
+        print(wallet.wallet_num)
+        print(account_info)
+        # if account_info['success']:
+        #     cardresinfo = []
+        #     if account_info['saved_cards']:
+        #         for card in account_info['saved_cards']:
+        #             entry = {}
+        #             entry.user_id = current_user.id
+        #             entry.cardnumber = card.card_pan
+        #             entry.cardexpirydate = card.expiration
+        #             entry.cardcvvnum = card.charge_code
+        #             cardresinfo.append(entry)
+        #             card_in_db = db.session.query(Cards).filter(and_(Cards.user_id == current_user.id, Cards.cardnumber == card.card_pan)).first()
+        #             bool_card_in_db = db.session.query(card_in_db.exists()).scalar()
+        #             if not bool_card_in_db:
+        #                 new_card = Cards(user_id=entry.user_id, cardnumber=entry.cardnumber, cardexpirydate=entry.cardexpirydate, cardcvvnum=entry.cardcvvnum )
+        #                 db.session.add(new_card)
+        #                 db.session.commit()
 
-            return render_template('user/index.html', cardinfo=cardresinfo, account_balance=account_info.balance, userinfo=userinfo)
+        #         return render_template('user/index.html', cardinfo=cardresinfo, account_balance=account_info.balance, userinfo=userinfo)
 
         cardinfo = db.session.query(Cards).filter(Cards.user_id == current_user.id).all()
         return render_template('user/index.html', cardinfo=cardinfo, account_balance=wallet.ngn_balance, userinfo=userinfo) 
@@ -109,10 +142,12 @@ def topup():
     if request.method == 'POST':
         body = request.get_json()
         channel = request.args.get('channel')
-        wallet = db.session.query(Accounts).get(Accounts.user_id == current_user.id)
+        #channel = request.form.get('channel')
+        wallet = db.session.query(Accounts).filter(Accounts.user_id == current_user.id).first()
         if channel == 'bank':
             # bank transfer
             bankres = wlt.FundWalletBankTransfer(wallet.wallet_num)
+            print(bankres)
             if bankres.success and bankres.data.success:
                 new_fund = BankFunding(user_id=current_user.id, wallet_num=wallet.wallet_num, third_party_num=bankres.data.data.account_number, bank_name=bankres.data.data.bank, reference=bankres.data.data.ref)
                 db.session.add(new_fund)
