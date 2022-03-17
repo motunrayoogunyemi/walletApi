@@ -122,6 +122,7 @@ def home():
 
         # save card
         save_card = wlt.SaveWalletCard(wallet.wallet_num, "tbd")
+        print(save_card)
         if save_card.success and save_card.data.success:
             return jsonify(status=True, message=save_card.data.message)
 
