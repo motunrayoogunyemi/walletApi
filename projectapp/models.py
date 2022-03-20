@@ -45,6 +45,7 @@ class BankFunding(db.Model):
     bank_name = db.Column(db.String(50))
     reference = db.Column(db.String(50))
     status = db.Column(db.String(50))
+    account_name = db.Column(db.String(50))
 
 class Transactions(db.Model):
     id = db.Column(db.Integer(), primary_key=True, autoincrement=True)

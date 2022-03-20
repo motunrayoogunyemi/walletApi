@@ -89,6 +89,7 @@ def FundWalletSavedCard(wallet_id,amount,code):
         "Authorization": "Bearer sk_test_622bdb64bd975352423021da622bdb64bd975352423021db"
     }
     response = requests.post(url, json=payload, headers=headers)
+    print("api response", response.content)
     return response.json()
 
 def FundWalletManually(wallet_id, amount):
