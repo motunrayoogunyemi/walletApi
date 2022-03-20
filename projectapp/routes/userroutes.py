@@ -200,7 +200,7 @@ def topup():
 def notify():
     # this is the notification webhook
     body = request.get_json()
-
+    print("notify event", body)
     if body['event'] == 'wallet.created':
         account_exist = db.session.query(Accounts).filter(Accounts.wallet_num == body['data'].wallet_id)
         bool_account_exist = db.session.query(account_exist.exists()).scalar()
