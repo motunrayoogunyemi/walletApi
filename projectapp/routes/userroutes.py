@@ -157,7 +157,7 @@ def topup():
         elif channel == 'card':
             # cards
             amount = body['amount'] * 100 # convert to kobo
-            card_res = wlt.FundWalletCard(wallet.wallet_num, amount, True, "http://localhost:5000/dashboard")
+            card_res = wlt.FundWalletCard(wallet.wallet_num, amount, True, "/dashboard")
             print(card_res)
             if card_res['success']:
                 return jsonify(cardurl=card_res['data'])
