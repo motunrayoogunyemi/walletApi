@@ -87,6 +87,12 @@ def home():
     print(wallet)
     if request.method == 'GET':
         userinfo = db.session.query(Users).get(current_user.id)
+        userinfo_obj = {'id':userinfo.id,
+        'user_fname':userinfo.user_fname,
+        'user_lname':userinfo.user_lname,
+        'user_email':userinfo.user_email,
+        'user_address':userinfo.user_address,
+        'user_phone':userinfo.user_phone}
         account_info = wlt.GetWalletDetails(wallet.wallet_num)
         print(wallet.wallet_num)
         print(account_info)
@@ -107,30 +113,18 @@ def home():
                         db.session.add(new_card)
                         db.session.commit()
                 print(cardresinfo)
-                return render_template('user/index.html', cardinfo=cardresinfo, account_balance=account_info['balance'], userinfo=userinfo)
+                return jsonify(cardinfo=cardresinfo, account_balance=account_info['balance'], userinfo=userinfo_obj)
 
         cardinfo = db.session.query(Cards).filter(Cards.user_id == current_user.id).all()
+        cardinfo_obj = []
         for c in cardinfo:
-            print(c)
-        return render_template('user/index.html', cardinfo=cardinfo, account_balance=wallet.ngn_balance, userinfo=userinfo) 
-    else:
-        # cardnum = request.form.get('cardnum')
-        # cardexp = request.form.get('cardexp')
-        # cardcvv = request.form.get('cardcvv')
-        # carddeets = Cards(cardnumber = cardnum, cardexpirydate=cardexp, cardcvvnum = cardcvv, user_id=current_user.id)
-        # db.session.add(carddeets)
-        # db.session.commit()
-
-        # save card, not feasible
-        # save_card = wlt.SaveWalletCard(wallet.wallet_num, "tbd")
-        # print(save_card)
-        # if save_card.success and save_card.data.success:
-        #     return jsonify(status=True, message=save_card.data.message)
-
-        #top up wallet, discard this, lool. Or not. Might be useful later
-        # selectedcard = request.form.get('mycard')
-        # amount = request.form.get('amount')
-        return 'success'
+            entry = {}
+            entry['user_id'] = current_user.id
+            entry['cardnumber'] = c.cardnumber
+            entry['cardexpirydate'] = c.cardexpirydate
+            entry['cardcvvnum'] = c.cardcvvnum
+            cardinfo_obj.append(entry)
+        return jsonify(cardinfo=cardinfo_obj, account_balance=wallet.ngn_balance, userinfo=userinfo_obj)
 
 @app.route('/topup', methods=['GET','POST'])
 def topup():
